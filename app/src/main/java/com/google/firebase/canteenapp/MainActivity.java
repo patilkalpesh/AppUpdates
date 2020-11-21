@@ -18,6 +18,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
+import android.text.TextUtils;
+import android.util.Log;
+import android.widget.EditText;
+
+import java.util.ArrayList;
+
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -54,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         mItemDatabaseReference = mFirebaseDatabase.getReference().child("items");
         mFirebaseAuth=FirebaseAuth.getInstance();
         mItemListView.setDivider(getDrawable(R.drawable.divider));
-        mItemListView.setDividerHeight(1);
+        mItemListView.setDividerHeight(0);
 
         final TextView orderButton=(TextView)findViewById(R.id.confirmOrderButton);
         TextView placeOrderButton=(TextView)findViewById(R.id.placeOrderButton);
@@ -85,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
               }
               Toast.makeText(MainActivity.this,"Your Order has been placed",Toast.LENGTH_SHORT).show();
               orderButton.setText("Confirm Order");
+              Intent placeOrderIntent= new Intent(getApplicationContext(), PaymentActivity.class);
+              startActivity(placeOrderIntent);
           }
       });
 
@@ -115,8 +127,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-
-
     }
     //calculating total of all the selected items
     public int calculateOrderTotal(){
@@ -175,9 +185,14 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    //This is for the option menu
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
+            case R.id.order_detail:
+                Intent orderDetailsIntent = new Intent(this, OrderDetails.class);
+
+                startActivity(orderDetailsIntent);
             case R.id.sign_out_menu:
                 AuthUI.getInstance().signOut(this);
                 return true;
@@ -219,6 +234,4 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
 }
-

@@ -11,8 +11,8 @@
         android:theme="@style/AppTheme">
         <activity android:name=".SplashScreen"
             android:theme="@style/SplashScreen"
-            android:noHistory="true"
-            android:screenOrientation="portrait">
+            android:noHistory="true">
+
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +21,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity"/>
-        <activity android:name=".AddItem"/>
+        <activity android:name=".AddItem"
+            android:label="Add Items"/>
+        <activity android:name=".OrderDetails"
+            android:label="Orders"/>
+        <activity android:name=".CompleteDetails"
+            android:label="Order Details"/>
+        <activity android:name=".PaymentActivity"/>
     </application>
 
 </manifest>
