@@ -4,17 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.api.DistributionOrBuilder;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,54 +22,53 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-public class CompleteDetails extends AppCompatActivity {
-
-    ListView mItemListView;
-    private ItemAdapter mItemAdapter;
-    private DatabaseReference mItemDatabaseReference;
+public class DeleteItems extends AppCompatActivity {
     private FirebaseDatabase mFirebaseDatabase;
+    ItemAdapter mItemAdapter;
+    private ListView listView;
     private ChildEventListener mChildEventListener;
-    ArrayList<Items> items= new ArrayList<>();
+    private DatabaseReference mItemDatabaseReference;
+    private ArrayList<String> keysList = new ArrayList<>();
+    private ArrayList<Items> deleteItems=new ArrayList<>();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.complete_details);
+        setContentView(R.layout.delete_items);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        Intent intent = getIntent();
-        final String username = intent.getStringExtra("username");
-
-        TextView textView=(TextView)findViewById(R.id.order_textview);
-        textView.setText("Order Details of user "+username);
-        final ListView listView = (ListView) findViewById(R.id.testView);
-        final ArrayList<String> users=new ArrayList<String>();
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.orderlistview, R.id.textView, users);
-        listView.setAdapter(arrayAdapter);
-
-      //  Button deleteButton=(Button)findViewById(R.id.delete_btn);
-       // deleteButton.setVisibility(View.INVISIBLE);
-
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mItemDatabaseReference = mFirebaseDatabase.getReference("orders").child(username);
+       // Button deleteButton=(Button)findViewById(R.id.delete_btn);
+       // deleteButton.setVisibility(View.INVISIBLE);
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mItemDatabaseReference = mFirebaseDatabase.getReference().child("items");
+        listView = (ListView) findViewById(R.id.deleteListView);
+        mItemAdapter=new ItemAdapter(this,R.layout.list_item,deleteItems);
+        listView.setAdapter(mItemAdapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+           //     mFirebaseDatabase.getReference("orders").child(orders.getName()).removeValue();
+            //    listView.remove(position); //or some other task
+                String key = keysList.get(position);
+                mItemDatabaseReference.child(key).removeValue();
+                Toast.makeText(getApplicationContext(),"Item has been removed",Toast.LENGTH_SHORT).show();
 
-/**
-        mItemListView=(ListView)findViewById(R.id.testView);
-        mItemAdapter=new ItemAdapter(this,R.layout.list_item,items);
-        mItemListView.setAdapter(mItemAdapter);
-        **/
+            }
+        });
 
+    }
+    public void attachDatabaseReadListener(){
         mChildEventListener=new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-               // Items mItem= snapshot.getValue(Items.class);
-                String name = snapshot.child("name").getValue(String.class);
-                int quantity = snapshot.child("mQuantity").getValue(Integer.class);
-                String message = "Item Name : "+name+"\nTotal Quantity : "+Integer.toString(quantity);
-                arrayAdapter.add(message);
-                //mItemAdapter.add(mItem);
+
+                Items mItem= snapshot.getValue(Items.class);
+                keysList.add(snapshot.getKey());
+                mItemAdapter.add(mItem);
             }
 
             @Override
@@ -80,7 +78,12 @@ public class CompleteDetails extends AppCompatActivity {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
+                Items item = snapshot.getValue(Items.class);
+                deleteItems.remove(item);
+                keysList.remove(snapshot.getKey());
+                mItemAdapter.notifyDataSetChanged();
+                finish();
+                startActivity(getIntent());
             }
 
             @Override
@@ -94,14 +97,19 @@ public class CompleteDetails extends AppCompatActivity {
             }
         };
         mItemDatabaseReference.addChildEventListener(mChildEventListener);
-
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //   mFirebaseAuth.addAuthStateListener(mAuthStateListener);
+        attachDatabaseReadListener();
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 //Write your logic here
-                Intent intent=new Intent(CompleteDetails.this, OrderDetails.class);
+                Intent intent=new Intent(DeleteItems.this, OrderDetails.class);
                 startActivity(intent);
                 finish();
             default:

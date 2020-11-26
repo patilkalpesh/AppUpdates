@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".LoginActivity"
+        app:cardCornerRadius="7dp"
+        app:cardElevation="2dp"
+        app:cardUseCompatPadding="true"
+        >
+   <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+    android:background="@drawable/layout_2">
+
+       <ImageView
+           android:id="@+id/imageView"
+           android:layout_width="wrap_content"
+           android:layout_height="300dp"
+           android:layout_centerInParent="true"
+           android:layout_alignParentTop="true"
+           app:srcCompat="@drawable/chef"
+           android:layout_marginTop="8dp"/>
+
+       <EditText
+                android:id="@+id/loginEmail"
+                android:layout_width="260dp"
+                android:layout_height="50dp"
+                android:textColor="@color/colorBlack"
+                android:inputType="textPersonName"
+                android:hint="Username"
+
+           android:textColorHint="@color/colorBlack"
+                android:layout_below="@id/imageView"
+                android:layout_marginTop="30dp"
+           android:layout_centerInParent="true"/>
+       <EditText
+           android:id="@+id/loginPassword"
+           android:layout_width="260dp"
+           android:layout_height="50dp"
+           android:inputType="textPassword"
+           android:textColor="@color/colorBlack"
+           android:hint="Password"
+           android:textColorHint="@color/colorBlack"
+           android:layout_below="@id/loginEmail"
+           android:layout_marginTop="20dp"
+           android:layout_centerInParent="true"
+           />
+       <Button
+           android:layout_width="200dp"
+           android:layout_height="50dp"
+           android:text="Login"
+           android:id="@+id/loginBtn"
+           android:textStyle="bold|italic"
+           android:textSize="17sp"
+           android:textColor="@color/colorBlack"
+           android:background="@drawable/layout_3"
+           android:layout_below="@id/loginPassword"
+           android:layout_centerInParent="true"
+           android:layout_marginTop="30dp"
+
+           />
+
+       <Button
+           android:id="@+id/gotoRegister"
+           android:layout_width="150dp"
+           android:layout_height="50dp"
+           android:textColor="@color/colorBlack"
+           android:text="Register"
+           android:textStyle="italic"
+           android:textSize="17sp"
+           android:background="@drawable/custom_edit"
+           android:layout_below="@id/loginBtn"
+           android:layout_centerInParent="true"
+           android:layout_marginTop="20dp"
+           android:textAllCaps="true"/>
+
+       <ProgressBar
+           android:id="@+id/loading_indicator"
+           style="@style/Widget.AppCompat.ProgressBar"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_below="@id/imageView"
+           android:layout_centerInParent="true"/>
+
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
